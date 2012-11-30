@@ -2,7 +2,7 @@ name := "dispatch-lift-json"
 
 organization := "net.databinder"
 
-version := "0.8.8"
+version := "0.8.8-1"
 
 scalaVersion := "2.9.1"
 
