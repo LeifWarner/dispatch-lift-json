@@ -1,10 +1,13 @@
 package dispatch.liftjson
-import dispatch._
 
-import net.liftweb.json._
+import org.json4s._
+import org.json4s.native.JsonParser
+import org.json4s.native.JsonMethods.{pretty, render}
+
 import JsonDSL._
 
 import java.util.Date
+import dispatch.classic.{CallbackVerbs, Request, HandlerVerbs}
 
 trait ImplicitJsonVerbs {
   /** Add JSON-processing method ># to dispatch.HandlerVerbs */
@@ -52,7 +55,7 @@ object Js extends TypeMappers with ImplicitJsonVerbs {
   implicit def sym2op(sym: Symbol) = new SymOp(sym)
   class SymOp(sym: Symbol) {
     def ?[T](block: JValue => List[T]): JValue => List[T] = {
-      case JObject(l) => l filter { _.name == sym.name } flatMap { jf => block(jf.value) }
+      case JObject(l) => l filter { _._1 == sym.name } flatMap { jf => block(jf._1) }
       case JField(name, value) if name == sym.name => block(value) 
       case _ => Nil
     }
